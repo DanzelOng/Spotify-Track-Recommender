@@ -1,0 +1,10 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(to right, #248445, #025a21);
+    font-family: 'Roboto', 'Arial';
+}
