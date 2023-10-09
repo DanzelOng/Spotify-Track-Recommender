@@ -30,3 +30,42 @@ def create_spotify_oauth(user_id=False):
                             scope=SCOPE)
 
 
+def get_recommended_tracks(spotify_API, count):
+    # get the user's recent played tracks
+    recent_tracks = spotify_API.current_user_recently_played(limit=count)['items']
+
+    artist_ids = [track['track']['artists'][0]['id'] for track in recent_tracks]
+    track_ids = [track['track']['id'] for track in recent_tracks]
+
+    artists_info = spotify_API.artists(artist_ids)['artists']
+
+    artist_genre = [artist['genres'] if artist['genres'] else ['pop'] for artist in artists_info]
+
+    genres = list(itertools.chain.from_iterable(artist_genre))
+    top_genre = max(genres, key=lambda x: genres.count(x))
+
+    zipped_data = zip(artist_ids, track_ids, artist_genre)
+    filtered_data = list(filter(lambda x: top_genre in x[2], zipped_data))
+
+    seed_artists = [i[0] for i in filtered_data]
+    seed_tracks= [i[1] for i in filtered_data]
+
+    while len(seed_artists) + len(seed_tracks) > 4:
+        if len(seed_artists) > len(seed_tracks):
+            seed_artists.pop(randrange(len(seed_artists)))
+        else:
+            seed_tracks.pop(randrange(len(seed_tracks)))
+
+    # get recommended tracks
+    recommended_tracks = spotify_API.recommendations(
+        seed_genre=top_genre, 
+        seed_artists=seed_artists, 
+        seed_tracks=seed_tracks, 
+        min_popularity=65, 
+        limit=50
+    )
+    return recommended_tracks, top_genre
+
+
+def create_playlist():
+    pass
