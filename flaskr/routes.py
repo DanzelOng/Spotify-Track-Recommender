@@ -6,6 +6,8 @@ import os
 
 
 
+track_list = []
+
 # route for login page
 @app.route('/', methods=('GET', 'POST'))
 def login():
@@ -88,7 +90,46 @@ def callback():
 # route for main page
 @app.route('/home', methods=('GET', 'POST'))
 def home():
-    pass
+    tracks = None
+
+    # prevent unauthorized users
+    if not session.get("user_id"):
+        flash(f"Please log in first", category='danger')
+        return redirect('/')
+
+    if request.method == 'POST':
+        oauth_obj = create_spotify_oauth(session.get("user_id"))
+        count = request.form.get("count")
+
+        # validate input
+        if count:
+            # input contains alphabetical characters
+            if not all(char.isdigit() for char in count):
+                flash("You did not enter a number", category='danger')
+
+            elif int(count) not in range(1, 51):
+                flash("Number out of range", category='danger')
+                
+            else:
+                track_list.clear()
+
+                # create a connection to Spotify API
+                spotify_API = Spotify(auth_manager=oauth_obj)
+
+                # get recommended tracks for user
+                tracks, genre = get_recommended_tracks(spotify_API, int(count))
+                if not tracks:
+                    flash("We couldn't generate recommendations based on your recent listening history. Try to listen to more songs!", category='warning')
+                else:
+                    for track in tracks['tracks']:
+                        track_list.append(track['id'])
+                    flash(f"Recommendations generated! You listened to {genre} the most!", category='info')
+
+        # display recommendations to user
+        return render_template("search.html", tracks=tracks)
+
+    # get request
+    return render_template("search.html", tracks=tracks)
 
 
 # route for handling user logout
