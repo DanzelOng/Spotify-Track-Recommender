@@ -8,6 +8,11 @@ import os
 
 track_list = []
 
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+
+    
 # route for login page
 @app.route('/', methods=('GET', 'POST'))
 def login():
