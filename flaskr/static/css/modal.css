@@ -1,0 +1,31 @@
+.modal-body {
+    background-color: #F5E6E8;
+}
+
+.track-info {
+    margin-top: 4px;
+    color: black;
+    border: 6px ridge rgb(213, 133, 235);
+}
+
+.track-info .link {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    justify-content: center;
+}
+
+img {
+    margin-left: 5px;
+}
+
+.track-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+}
+
+.modal-footer .options {
+    color: black;
+    font-weight: 500;
+}
