@@ -100,6 +100,7 @@ def home():
     if request.method == 'POST':
         oauth_obj = create_spotify_oauth(session.get("user_id"))
         count = request.form.get("count")
+        playlist = request.form.get("playlist")
 
         # validate input
         if count:
@@ -119,14 +120,17 @@ def home():
                 # get recommended tracks for user
                 tracks, genre = get_recommended_tracks(spotify_API, int(count))
                 if not tracks:
-                    flash("We couldn't generate recommendations based on your recent listening history. Try to listen to more songs!", category='warning')
+                    flash("We couldn't generate recommendations based on your recent listening history. Try to listen to more songs!", category='danger')
                 else:
                     for track in tracks['tracks']:
                         track_list.append(track['id'])
                     flash(f"Recommendations generated! You listened to {genre} the most!", category='info')
 
-        # display recommendations to user
-        return render_template("search.html", tracks=tracks)
+        if playlist:
+            playlist = create_playlist(playlist, track_list, session.get("user_id"))
+            track_list.clear()
+            tracks = None
+            flash(f"Playlist {playlist} created successfully!", category='info')
 
     # get request
     return render_template("search.html", tracks=tracks)
@@ -135,4 +139,15 @@ def home():
 # route for handling user logout
 @app.route('/logout')
 def logout():
-    pass
+    # prevent unauthorized users
+    if not session.get("user_id"):
+        flash(f"Please log in first", category='danger')
+        return redirect('/')
+    
+    user_id = session.get("user_id")
+    session.clear()
+    os.remove(os.path.join(CACHE_FOLDER, f".cache-{user_id}")) if user_id is not None else None
+    flash("You have been logged out!", category='info')
+    
+    # log user out
+    return redirect('/')
