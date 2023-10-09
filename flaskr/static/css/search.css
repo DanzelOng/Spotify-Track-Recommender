@@ -1,0 +1,42 @@
+input {
+    outline: none;
+    padding-left: 5px;
+    box-shadow: 10px 7px 17px rgba(0, 0, 0, 0.3)
+}
+
+input::placeholder {
+    text-align: center;
+    font-weight: 500;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 4px;
+    margin-top: 0;
+}
+
+.option {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logout {
+    width: 150px;
+    margin-left: 15px;
+}
+
+.recommend, .logout {
+    font-weight: 500;
+}
+
+.exit{
+    text-decoration: none;
+    color: black;
+}
+
+.exit:hover {
+    color: black;
+}

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+{% endblock %}
+
+
+{% block title %}User Page{% endblock %}
+    
+{% block content %}
+    <form method="POST">
+        <label>Enter a Count (max=50)</label>
+        <input type="search" name="count">
+    </form>
+{% endblock %}
+
+{% block options %}
+    {% if tracks %}
+        {% include 'modal.html' %} 
+    {% endif %}
+    <div class="option">
+        {% if tracks %}
+            <button type="button" class="recommend btn btn-warning btn-modal" data-bs-toggle="modal" data-bs-target="#trackModal">
+                View Recommendations
+            </button>
+        {% else %}
+            <button type="button" class="recommend btn btn-warning">
+                View Recommendations
+            </button>
+        {% endif %}
+        <button type="button" class="logout btn btn-danger"><a class="exit" href="{{ url_for('logout') }}">Logout</a></button>
+    </div>
+{% endblock %}
