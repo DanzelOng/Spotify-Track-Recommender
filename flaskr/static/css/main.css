@@ -8,3 +8,46 @@ body {
     background: linear-gradient(to right, #248445, #025a21);
     font-family: 'Roboto', 'Arial';
 }
+
+.flexbox-container {
+    padding: 10rem 1rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    color: black;
+}
+
+.flex-item {
+    padding: 2rem;
+    border: solid rgb(184, 184, 184) 2px;
+    background-color: #5aae75;
+    box-shadow: 5px 10px 15px rgba(0, 0, 0, 0.4);
+}
+
+button {
+    width: 100%;
+    padding: 1rem 0.5rem;
+    border: none;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.notif p {
+    margin: 0;
+    text-align: center;
+}
+
+i, p, .form-link {
+    font-weight: 500;
+}
+
+.user-label, button a, .logout {
+    font-weight: 500;
+    outline: none;
+}
+
+.form-id {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
