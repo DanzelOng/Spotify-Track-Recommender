@@ -1,0 +1,39 @@
+<!-- Outer Modal -->
+<div class="modal fade" id="trackModal" tabindex="-1" aria-labelledby="trackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="trackModalLabel">Recommendations</h5>
+        </div>
+        <div class="modal-body">
+            {% for track in tracks.tracks %}
+                <div class="track-info">
+                    <img class='track-image' src="{{ track.album.images.0.url }}" alt="{{ track.name }}">
+                    <h3>{{ track.name }}</h3>
+                    <p>By {{ track.artists.0.name }}</p>
+                    <button class="link btn btn-success spotify-link">
+                        <a class="exit" href="{{ track.external_urls.spotify }}" target="_blank">
+                            Listen on Spotify
+                        </a>
+                        <img src="{{ url_for('static', filename='img/spotify-white.png') }}">
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <div class="collapse" id="playlistCollapse">
+                <form method="POST">
+                    <label for="playlist">Playlist Name</label>
+                    <input type="text" name="playlist">
+                </form>
+            </div>
+            <!-- Button to open Inner Modal -->
+            <button type="button" class="options btn btn-warning" data-bs-toggle="modal" data-bs-target="#innerModal">
+                Save Recommendations to Playlist
+            </button>
+            <button type="button" class="options btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+
