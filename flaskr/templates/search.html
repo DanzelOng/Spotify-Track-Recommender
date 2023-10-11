@@ -30,6 +30,25 @@
                 View Recommendations
             </button>
         {% endif %}
-        <button type="button" class="logout btn btn-danger"><a class="exit" href="{{ url_for('logout') }}">Logout</a></button>
+        <button type="button" class="logout btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal"><a class="exit">Logout</a></button>
+    </div>
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title w-100" id="logoutModalLabel">Log Out of Spotify</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body fw-bold">
+                    You will be redirected to Spotify to complete the logout process.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="options btn btn-primary btn-warning" onclick="redirectToSpotify()">Proceed to Spotify Logout</button>
+                    <button type="button" class="options btn btn-secondary btn-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
