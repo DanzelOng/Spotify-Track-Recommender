@@ -1,5 +1,5 @@
 from spotipy import Spotify, CacheFileHandler
-from flask import request, session, url_for, redirect, render_template, flash
+from flask import request, session, url_for, redirect, render_template, flash, jsonify
 from .helpers import CACHE_FOLDER, create_spotify_oauth, get_recommended_tracks, create_playlist
 from . import app
 import os
@@ -12,7 +12,7 @@ track_list = []
 def make_session_permanent():
     session.permanent = True
 
-    
+
 # route for login page
 @app.route('/', methods=('GET', 'POST'))
 def login():
@@ -144,15 +144,34 @@ def home():
 # route for handling user logout
 @app.route('/logout')
 def logout():
-    # prevent unauthorized users
-    if not session.get("user_id"):
-        flash(f"Please log in first", category='danger')
-        return redirect('/')
+    # check if incoming request is AJAX request
+    is_ajax = request.headers.get('X-Requested-With')
+
+    # AJAX request
+    if is_ajax:
+        user_id = session.get("user_id")
+        session.clear()
+        os.remove(os.path.join(CACHE_FOLDER, f".cache-{user_id}")) if user_id is not None else None
+        
+        # return successful log out in JSON
+        return jsonify(success=True)
     
-    user_id = session.get("user_id")
-    session.clear()
-    os.remove(os.path.join(CACHE_FOLDER, f".cache-{user_id}")) if user_id is not None else None
-    flash("You have been logged out!", category='info')
+    else:
+        if not session.get("user_id"):
+            flash(f"Please log in first", category='danger')
+            return redirect('/')
+        
+
+@app.route('/post_spotify_logout')
+def post_spotify_logout():
+    is_ajax = request.headers.get('X-Requested-With')
+    if is_ajax:
+        flash("You have been logged out!", category='info')
+
+        # return redirect URL in JSON
+        return jsonify(redirect_url="/")
     
-    # log user out
-    return redirect('/')
+    else:
+        if not session.get("user_id"):
+            flash(f"Unauthorized access", category='danger')
+            return redirect('/')
